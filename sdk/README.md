@@ -84,3 +84,20 @@ console.log(out);
 
 ## Spec
 See the repository `spec/PXP-201.md`.
+
+## Test vectors (PXP-201 v0.1)
+
+This package ships reproducible test vectors under `test-vectors/`.
+
+Run them locally:
+
+```bash
+npm run build
+npm run vectors
+```
+
+### What is covered (v0.1)
+- **RAW**: AES-256-GCM encryption with fixed DEK + nonce
+- **WK1**: secp256k1 ECDH + HKDF-SHA256 + AES-256-GCM (fixed ephPriv + IV)
+
+> Note: deterministic options (`nonce`, `opts.ephPrivKey`, `opts.iv`) are intended for test vectors only.
