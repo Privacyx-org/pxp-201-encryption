@@ -1,0 +1,21 @@
+{
+  "name": "pxp-201-encryption",
+  "version": "1.0.0",
+  "description": "PXP-201 defines a general-purpose encryption envelope format for Web2 + Web3: - encrypt once (off-chain or on-chain) - control who can decrypt (recipients or policies) - interop via SDK profiles (AES-GCM / XChaCha20, ECIES/HPKE/etc.)",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "node --test",
+    "lint": "echo \"(lint later)\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@noble/secp256k1": "^3.0.0"
+  }
+}
