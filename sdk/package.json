@@ -1,6 +1,6 @@
 {
   "name": "@privacyx/pxp201",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -20,9 +20,11 @@
     "LICENSE",
     "test-vectors"
   ],
-  "devDependencies": {
+  "dependencies": {
     "@noble/hashes": "^2.0.1",
-    "@noble/secp256k1": "^3.0.0",
+    "@noble/secp256k1": "^3.0.0"
+  },
+  "devDependencies": {
     "typescript": "^5.9.3"
   }
 }
