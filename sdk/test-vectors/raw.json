@@ -1,0 +1,12 @@
+{
+  "name": "raw-aes-256-gcm-fixed",
+  "v": "0.1",
+  "cipher": "AES-256-GCM",
+  "plaintext": "hello",
+  "aadText": "aad",
+  "dekHex": "0x000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "nonceB64url": "AQIDBAUGBwgJCgsM",
+  "ciphertextB64url": "bY82uYOWXH2ko8D10wN-PjvA0wEg",
+  "ciphertextHash": "0x6f3e82bf861ccfb90d55d184ff711a751e100925e3f90feb001daa5d4b9abf46",
+  "aadHash": "0x95162aaa1b13769d45cdbd839920405271c89e40b58c41abc88928208e266c0c"
+}

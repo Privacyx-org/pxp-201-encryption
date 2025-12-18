@@ -35,7 +35,8 @@ export async function encryptSymmetric(
   cipher: Pxp201Cipher,
   dek: Uint8Array,
   plaintext: Uint8Array,
-  aad?: Uint8Array
+  aad?: Uint8Array,
+  opts?: { nonce?: Uint8Array }
 ): Promise<Omit<EncryptResult, "dek">> {
   if (cipher !== "AES-256-GCM") {
     throw new Pxp201Error("CRYPTO_CIPHER", "Only AES-256-GCM is supported in v0.1");
@@ -43,7 +44,9 @@ export async function encryptSymmetric(
 
   const subtle = requireSubtle();
   const key = await importAesKey(dek);
-  const nonce = randomBytesN(12);
+
+  const nonce = opts?.nonce ?? randomBytesN(12);
+  if (nonce.length !== 12) throw new Pxp201Error("CRYPTO_NONCE", "AES-GCM nonce must be 12 bytes");
 
   const params: AesGcmParams = {
     name: "AES-GCM",

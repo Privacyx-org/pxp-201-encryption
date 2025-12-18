@@ -13,9 +13,16 @@ function requireSubtle(): SubtleCrypto {
   return g.crypto.subtle as SubtleCrypto;
 }
 
-async function aesGcmEncrypt(key32: Uint8Array, plaintext: Uint8Array, aad?: Uint8Array) {
+async function aesGcmEncrypt(
+  key32: Uint8Array,
+  plaintext: Uint8Array,
+  aad?: Uint8Array,
+  opts?: { iv?: Uint8Array }
+) {
   const subtle = requireSubtle();
-  const iv = randomBytesN(12);
+
+  const iv = opts?.iv ?? randomBytesN(12);
+  if (iv.length !== 12) throw new Pxp201Error("WRAP_NONCE", "AES-GCM nonce must be 12 bytes");
 
   const cryptoKey = await subtle.importKey("raw", toArrayBuffer(key32), { name: "AES-GCM" }, false, ["encrypt"]);
   const ctBuf = await subtle.encrypt(
@@ -62,13 +69,21 @@ export async function wrapDEK_secp256k1(args: {
   recipientPubKeyHex: string;   // 33-byte compressed hex
   kid?: string;
   aadText?: string;
+
+  // deterministic / test vectors
+  opts?: {
+    ephPrivKey?: Uint8Array; // 32 bytes
+    iv?: Uint8Array;         // 12 bytes
+  };
 }): Promise<string> {
   if (args.dek.length !== 32) throw new Pxp201Error("WRAP_DEK", "DEK must be 32 bytes");
 
   const recipPub = hexToBytes(args.recipientPubKeyHex);
   if (recipPub.length !== 33) throw new Pxp201Error("WRAP_PUB", "recipient pubkey must be 33 bytes compressed");
 
-  const ephPriv = secp.utils.randomSecretKey();
+  const ephPriv = args.opts?.ephPrivKey ?? secp.utils.randomSecretKey();
+  if (ephPriv.length !== 32) throw new Pxp201Error("WRAP_EPH", "ephPrivKey must be 32 bytes");
+
   const ephPub = secp.getPublicKey(ephPriv, true);
 
   const shared = secp.getSharedSecret(ephPriv, recipPub, true);
@@ -78,7 +93,7 @@ export async function wrapDEK_secp256k1(args: {
   const aad = args.aadText ? new TextEncoder().encode(args.aadText) : undefined;
 
   const wrapKey = await hkdfSha256({ ikm, salt: ephPub, info, length: 32 });
-  const { iv, ct } = await aesGcmEncrypt(wrapKey, args.dek, aad);
+  const { iv, ct } = await aesGcmEncrypt(wrapKey, args.dek, aad, { iv: args.opts?.iv });
 
   const payload: WrappedKeyV1 = {
     alg: "ECIES-secp256k1+HKDF-SHA256+AES-256-GCM",
