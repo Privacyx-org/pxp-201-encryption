@@ -1,4 +1,4 @@
-import { randomBytes as nodeRandomBytes } from "node:crypto";
+import { randomBytes } from "@noble/hashes/utils.js";
 
 export function utf8ToBytes(s: string): Uint8Array {
   return new TextEncoder().encode(s);
@@ -20,14 +20,6 @@ export function b64urlDecode(s: string): Uint8Array {
 }
 
 export function randomBytesN(n: number): Uint8Array {
-  // Browser / modern runtimes
-  const g: any = globalThis as any;
-  if (g.crypto && typeof g.crypto.getRandomValues === "function") {
-    const out = new Uint8Array(n);
-    g.crypto.getRandomValues(out);
-    return out;
-  }
-
-  // Node fallback
-  return new Uint8Array(nodeRandomBytes(n));
+  return randomBytes(n);
 }
+
