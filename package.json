@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "node --test",
-    "lint": "echo \"(lint later)\""
+    "lint": "echo \"(lint later)\"",
+    "e2e": "node examples/pxp201-e2e.mjs"
   },
   "keywords": [],
   "author": "",
